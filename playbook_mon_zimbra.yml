@@ -1,0 +1,42 @@
+- name: Install Zabbix Agent Zimbra template
+  hosts: ansible_tests
+  become: yes
+
+  tasks:
+
+   - name: Copy module mon_zimbra.conf
+     copy:
+       src: /etc/ansible/mon_zimbra/files/zabbix/mon-zimbra.conf
+       dest: /etc/zabbix/zabbix_agentd.d/
+  
+  - name: Copy sudo_zabbix_agent.conf
+     copy:
+       src: /etc/ansible/mon_zimbra/files/zabbix/sudo_zabbix_agent
+       dest: /etc/sudoers.d/
+
+  - name: zimbra_services.sh
+     copy:
+       src: /etc/ansible/mon_zimbra/files/zabbix/zimbra_services.sh
+       dest: /etc/zabbix/scripts/
+  
+  - name: zimbra_version.sh
+     copy:
+       src: /etc/ansible/mon_zimbra/files/zabbix/zimbra_version.sh
+       dest: /etc/zabbix/scripts/
+
+  - name: Change file permissions of zimbra_service.sh
+    file:
+     path: /path/to/zimbra_service.sh
+     mode: "+x"
+    
+  - name: Change file permissions of zimbra_version.sh
+    file:
+     path: /path/to/zimbra_version.sh
+     mode: "+x"
+
+   
+  handlers:
+    - name: Restart Zabbix Agent service
+      systemctl:
+        name: zabbix-agent
+        state: restarted
