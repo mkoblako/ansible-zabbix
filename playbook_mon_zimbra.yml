@@ -3,6 +3,15 @@
   become: yes
 
   tasks:
+   - name: Delete old zabbix-agent configure
+     file:
+      path: /etc/zabbix/zabbix_agentd.d/yo-zimbra.conf
+      state: absent
+
+   - name: Delete old sudoers configure
+     file:
+      path: /etc/sudoers.d/03_zabbix
+      state: absent
 
    - name: Copy module mon_zimbra.conf
      copy:
